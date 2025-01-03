@@ -2,6 +2,7 @@ package com.ziczic.be.global.jwt;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,9 +17,9 @@ public class JwtUtil {
 	@Value("${jwt.secret}")
 	private String secret;
 
-	public String generateToken(String memberName) {
+	public String generateToken(Map<String, Object> claims) {
 		String token = Jwts.builder()
-			.setSubject(memberName)
+			.setClaims(claims)
 			.setIssuedAt(new Date())
 			.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
 			.signWith(getSigningKey())
@@ -27,7 +28,7 @@ public class JwtUtil {
 		return token;
 	}
 
-	public String geMemberNameFromToken(String token) {
+	public String getClaimsFromToken(String token) {
 		return Jwts.parserBuilder()
 			.setSigningKey(getSigningKey())
 			.build()
