@@ -39,8 +39,9 @@ public class MemberController {
 	@PostMapping("/login")
 	@ResponseStatus(HttpStatus.OK)
 	public String memberLogin(@RequestBody MemberLoginReq req) {
-		String token = memberService.memberLogin(req.memberId());
-
+		log.info("member Req : {}", req);
+		String token = memberService.memberLogin(req.memberName(), req.memberPassword());
+		log.info("token {}", token);
 		return token;
 	}
 }

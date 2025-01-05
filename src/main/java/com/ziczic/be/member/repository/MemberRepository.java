@@ -7,4 +7,5 @@ import com.ziczic.be.member.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findById(Long id);
+	Optional<Member> findByMemberName(String memberName);
 }
