@@ -10,5 +10,7 @@ spring:
   logging:
     level:
       root: INFO
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
 jwt:
   secret: c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24tYW5kLXZhbGlkYXRpb24=
