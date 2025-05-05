@@ -1,36 +1,37 @@
-package com.ziczic.be.workspace.entity;
+package com.ziczic.be.workspaceMember.entity;
 
 import java.time.LocalDateTime;
 
 import com.ziczic.be.member.entity.Member;
+import com.ziczic.be.workspace.entity.Workspace;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WorkspaceMember {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "workspace_id")
 	private Workspace workspace;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne //
 	@JoinColumn(name = "member_id")
 	private Member member;
 
@@ -40,9 +41,7 @@ public class WorkspaceMember {
 	@Builder
 	public WorkspaceMember(Workspace workspace, Member member) {
 		this.workspace = workspace;
-		this.member = member;
-		this.joinedAt = LocalDateTime.now();
+		this.member	= member;
+		this.joinedAt =  LocalDateTime.now();
 	}
-
-
 }

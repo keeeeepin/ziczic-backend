@@ -4,7 +4,9 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
-
+	private final JwtUtil jwtUtil;
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	@PostMapping("/signup")
@@ -38,10 +40,23 @@ public class MemberController {
 
 	@PostMapping("/login")
 	@ResponseStatus(HttpStatus.OK)
-	public String memberLogin(@RequestBody MemberLoginReq req) {
-		log.info("member Req : {}", req);
-		String token = memberService.memberLogin(req.memberName(), req.memberPassword());
-		log.info("token {}", token);
-		return token;
+	public ResponseEntity<?> memberLogin(@RequestBody MemberLoginReq req) {
+		Member member = memberService.memberLogin(req.memberName(), req.memberPassword());
+
+		log.info("member : {}", member);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, Object> claims = objectMapper.convertValue(member, Map.class);
+
+		String token = jwtUtil.generateToken(claims);
+		log.info("token : {}", token);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.headers(headers)
+			.body(member);
 	}
 }

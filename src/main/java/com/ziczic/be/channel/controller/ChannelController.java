@@ -28,10 +28,10 @@ public class ChannelController {
 	private final ChannelService channelService;
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public void createChannel(@RequestBody ChannelCreateReq req) {
+		log.info("req :", req.name());
 		channelService.createChannel(req.workspaceId(), req.name());
 	}
 
@@ -39,6 +39,8 @@ public class ChannelController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<List<ChannelListGetResp>> getChannelList(@RequestParam Long workspaceId) {
 		List<ChannelListGetResp> channels = channelService.getChannelList(workspaceId);
+
+		log.info("channels : {}", channels);
 		return ResponseEntity.ok(channels);
 	}
 }

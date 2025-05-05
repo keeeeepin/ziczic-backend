@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 
 	private final MemberRepository memberRepository;
-	private final JwtUtil jwtUtil;
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
 	public void memberRegister(String  memberName, String memberPassword)
@@ -32,7 +31,7 @@ public class MemberService {
 		memberRepository.save(member);
 	}
 
-	public String memberLogin(String name, String password) {
+	public Member memberLogin(String name, String password) {
 		Member member = memberRepository.findByMemberName(name)
 			.orElseThrow(() -> new EntityNotFoundException("Member Not Found.."));
 
@@ -40,13 +39,7 @@ public class MemberService {
 			return null;
 		}
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		Map<String, Object> claims = objectMapper.convertValue(member, Map.class);
 
-		log.info("claims {}", claims);
-
-		String token = jwtUtil.generateToken(claims);
-
-		return token;
+		return member;
 	}
 }

@@ -17,4 +17,5 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 	List<Workspace> findAllByMemberId(@Param("memberId") Long memberId);
 
 	Optional<Workspace> findById(Long id);
+
 }
