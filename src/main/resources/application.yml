@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: sinhyeyeon
+    password: hyhy
+  logging:
+    level:
+      root: INFO
+jwt:
+  secret: c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24tYW5kLXZhbGlkYXRpb24=
