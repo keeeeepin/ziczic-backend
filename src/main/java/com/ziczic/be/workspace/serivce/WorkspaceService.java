@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 import com.ziczic.be.global.jwt.JwtUtil;
 import com.ziczic.be.member.entity.Member;
 import com.ziczic.be.member.repository.MemberRepository;
+import com.ziczic.be.workspace.dto.WorkspaceListResp;
 import com.ziczic.be.workspace.dto.WorkspaceResp;
 import com.ziczic.be.workspace.entity.Workspace;
-import com.ziczic.be.workspace.entity.WorkspaceMember;
-import com.ziczic.be.workspace.repository.WorkspaceMemberRepository;
 import com.ziczic.be.workspace.repository.WorkspaceRepository;
+import com.ziczic.be.workspaceMember.service.WorkspaceMemberService;
 
 import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,11 +26,12 @@ public class WorkspaceService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 	private final WorkspaceRepository workspaceRepository;
-	private final WorkspaceMemberRepository workspaceMemberRepository;
 	private final MemberRepository memberRepository;
 	private final JwtUtil jwtUtil;
 
-	public void createWorkspace(String accessToken, String name) {
+	private final WorkspaceMemberService workspaceMemberService;
+
+	public Workspace createWorkspace(String accessToken, String name) {
 
 		Claims claims = jwtUtil.getClaimsFromToken(accessToken);
 		Long ownerId = claims.get("id", Long.class);
@@ -47,30 +48,38 @@ public class WorkspaceService {
 
 		workspaceRepository.save(workspace);
 
-		// workspace member에 등록
-		addWorkspaceMember(workspace, member);
+		workspaceMemberService.joinWorkspace(workspace.getId(), member.getId());
+
+		// // workspace member에 등록
+		// addWorkspaceMember(workspace, member);
+
+		return workspace;
 	}
 
-	public void addWorkspaceMember(Workspace workspace, Member member) {
-		WorkspaceMember workspaceMember = WorkspaceMember.builder()
-			.workspace(workspace)
-			.member(member)
-			.build();
+	// public void addWorkspaceMember(Workspace workspace, Member member) {
+	// 	WorkspaceMember workspaceMember = WorkspaceMember.builder()
+	// 		.workspace(workspace)
+	// 		.member(member)
+	// 		.build();
+	//
+	// 	workspaceMemberRepository.save(workspaceMember);
+	// }
 
-		workspaceMemberRepository.save(workspaceMember);
-	}
 
-	// accessToken ->
-	public List<WorkspaceResp> getWorkspaceList(Long memberId) {
+	public List<WorkspaceListResp> getWorkspaceList() {
 
-		List<Workspace> list = workspaceRepository.findAllByMemberId(memberId);
+		List<Workspace> list = workspaceRepository.findAll();
+
 		log.info("List : {}", list.get(0).getWorkspaceName());
 
-		return workspaceRepository.findAllByMemberId(memberId)
+		List<WorkspaceListResp> workspaceListResp = workspaceRepository.findAll()
 			.stream()
-			.map(WorkspaceResp::new)
+			.map(ws -> new WorkspaceListResp(ws.getId(), ws.getWorkspaceName(), ws.getCreatedAt()))
 			.collect(Collectors.toList());
 
+		log.info("resp :", workspaceListResp.get(0).workspaceName());
+
+		return workspaceListResp;
 	}
 
 }

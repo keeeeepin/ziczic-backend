@@ -1,11 +1,9 @@
-package com.ziczic.be.channel.entity;
+package com.ziczic.be.chat.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.ziczic.be.chat.entity.Chat;
-import com.ziczic.be.workspace.entity.Workspace;
+import com.ziczic.be.channel.entity.Channel;
+import com.ziczic.be.member.entity.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,39 +13,43 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Channel {
+@Entity
+public class Chat {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
-	private String name;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "channel_id")
+	private Channel channel;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "workspace_id")
-	private Workspace workspace;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id")
+	private Member sender;
+
+	@Column(columnDefinition = "TEXT")
+	private String content;
 
 	@Column
 	private LocalDateTime createdAt;
-	//
-	// @OneToMany(mappedBy = "channel")
-	// private List<Chat> chatList = new ArrayList<>();
 
+	// 답글을 위한 셀프 참조
 
 	@Builder
-	public Channel(String name, Workspace workspace){
-		this.name = name;
-		this.workspace = workspace;
+	public Chat(Channel channel, Member sender, String content) {
+		this.channel = channel;
+		this.sender = sender;
+		this.content = content;
 		this.createdAt = LocalDateTime.now();
 	}
+
 }
