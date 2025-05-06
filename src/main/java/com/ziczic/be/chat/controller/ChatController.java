@@ -71,7 +71,7 @@ public class ChatController {
 
 
 	// 채팅 리스트 반환
-	@GetMapping("/{workspaceId}/{channelId}/chatHistory")
+	@GetMapping("/api/{workspaceId}/{channelId}/chatHistory")
 	public ResponseEntity<List<GetChatHistoryResp>> getChatMessages(@PathVariable Long workspaceId, @PathVariable Long channelId) {
 		List<Chat> chats = chatService.getChatHistory(workspaceId, channelId);
 
