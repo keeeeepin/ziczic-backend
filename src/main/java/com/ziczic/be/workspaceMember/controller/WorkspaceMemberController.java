@@ -25,7 +25,7 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/workspaces")
+@RequestMapping("/api/workspaces")
 @RequiredArgsConstructor
 public class WorkspaceMemberController {
 
