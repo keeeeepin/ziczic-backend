@@ -21,7 +21,7 @@ import com.ziczic.be.channel.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/channel")
+@RequestMapping("/api/channel")
 @RequiredArgsConstructor
 public class ChannelController {
 
