@@ -1,3 +1,5 @@
+server:
+  port: 8090  # 원하는 포트 번호로 설정
 spring:
   jpa:
     database: postgresql
