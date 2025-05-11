@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,13 @@ public class MemberController {
 	private final MemberService memberService;
 	private final JwtUtil jwtUtil;
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
+
+	@GetMapping("/test")
+	@ResponseStatus(HttpStatus.OK)
+	public String memberTest() {
+		return "member Test Ok";
+	}
+
 
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.CREATED)
